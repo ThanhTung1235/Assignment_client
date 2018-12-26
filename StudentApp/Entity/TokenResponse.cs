@@ -8,6 +8,9 @@ namespace StudentApp.Entity
 {
     class TokenResponse
     {
-        public string _token { get; set; }
+        private string _accessToken;
+        private int _ownerId;
+        public string accessToken { get => _accessToken; set => _accessToken = value; }
+        public int OwnerId { get => _ownerId; set => _ownerId = value; }
     }
 }

@@ -10,9 +10,12 @@
 <Frame x:Name="Frame">
     <ScrollViewer>
         <StackPanel Margin="20, 20, 20, 20">
+            <Button Click="btn_back">
+                <SymbolIcon Symbol="Back"/>
+                </Button>
             <TextBlock Text="Thay đổi thông tin cá nhân" FontSize="25" HorizontalAlignment="Center" Margin="0,25,0,10" FontWeight="Bold"></TextBlock>
-            <TextBox x:Name="Email" Header="Email"/>
-            <TextBlock x:Name="email" Foreground="Red"></TextBlock>
+            <TextBox x:Name="Name" Header="Name"/>
+            <TextBlock x:Name="name" Foreground="Red"></TextBlock>
             <Grid Margin="0, 20, 0 , 0">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="0.5*"></ColumnDefinition>
@@ -22,13 +25,12 @@
                     <RowDefinition Height="0.5*"></RowDefinition>
                     <RowDefinition Height="0.5*"></RowDefinition>
                 </Grid.RowDefinitions>
-                <TextBox x:Name="FirstName" Header="First Name" Grid.Row="0" Grid.Column="0" Margin="0, 0, 10, 0"/>
-                <TextBlock x:Name="firstName" Grid.Row="1" Grid.Column="0" Foreground="Red"></TextBlock>
-                <TextBox x:Name="LastName" Header="Last Name" Grid.Row="0" Grid.Column="1"/>
-                <TextBlock x:Name="lastName" Grid.Row="1" Grid.Column="1" Foreground="Red"></TextBlock>
+                    <TextBox x:Name="Email" Header="Email" Grid.Row="0" Grid.Column="0" Margin="0, 0, 10, 0"/>
+                <TextBlock x:Name="email" Grid.Row="1" Grid.Column="0" Foreground="Red"></TextBlock>
+                    <TextBox x:Name="Phone" Header="Phone" Grid.Row="0" Grid.Column="1"/>
+                    <TextBlock x:Name="phone" Grid.Row="1" Grid.Column="1" Foreground="Red"></TextBlock>
             </Grid>
-            <TextBox x:Name="Phone" Header="Số điện thoại" Margin="0, 20, 0 , 0"/>
-            <TextBlock x:Name="phone" Foreground="Red"></TextBlock>
+            
             <TextBox x:Name="Address" Header="Địa chỉ" AcceptsReturn="True" Height="100" Margin="0, 20, 0 , 0"/>
             <TextBlock x:Name="address" Foreground="Red"></TextBlock>
             <TextBlock Text="Giới Tính" Margin="0, 20, 0 , 0"/>

@@ -8,7 +8,7 @@ namespace StudentApp.Entity
 {
     class Student
     {
-        public long Rollnumber { get; set; }
+        public int Rollnumber { get; set; }
         public string Name { get; set; }
         public string Email { get; set; }
         public int Gender { get; set; }
@@ -18,6 +18,7 @@ namespace StudentApp.Entity
         public DateTime CreatedAt { get; set; }
         public DateTime UpdatedAt { get; set; }
         public StudentStatus Status { get; set; }
+
     }
     public enum StudentStatus
     {

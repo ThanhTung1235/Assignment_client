@@ -5,6 +5,7 @@ using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
+using Windows.Storage;
 using Windows.UI;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -35,8 +36,13 @@ namespace StudentApp
             this.Student_splitview.IsPaneOpen = !this.Student_splitview.IsPaneOpen;
         }
 
-        public void Logout()
+        public async void Logout()
         {
+            StorageFile storageFile = await ApplicationData.Current.LocalFolder.GetFileAsync("token.txt");
+            if (storageFile != null)
+            {
+                await storageFile.DeleteAsync();
+            }
 
         }
         private void RadioButton_Click(object sender, RoutedEventArgs e)

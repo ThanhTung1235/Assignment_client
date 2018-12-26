@@ -9,6 +9,8 @@ using System.Runtime.InteropServices.WindowsRuntime;
 using System.Text;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
+using Windows.Storage;
+using Windows.UI.Popups;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
@@ -35,31 +37,60 @@ namespace StudentApp.Views
             this._currentStudent = new Student();
             this.InitializeComponent();
             this.NavigationCacheMode = Windows.UI.Xaml.Navigation.NavigationCacheMode.Enabled;
+            GetInfo();
+        }
+
+        public async void GetInfo()
+        {
+            StorageFolder storageFolder = ApplicationData.Current.LocalFolder;
+            StorageFile file = await storageFolder.GetFileAsync("token.txt");
+            var content = await FileIO.ReadTextAsync(file);
+            TokenResponse tokenResponse = JsonConvert.DeserializeObject<TokenResponse>(content);
+            HttpClient httpClient = new HttpClient();
+            httpClient.DefaultRequestHeaders.Add("Authorization", "Basic " + tokenResponse.accessToken);
+
+            var responseApi = httpClient.GetAsync(APIHandle.GET_INFO_USER +tokenResponse.OwnerId);
+            var responseContent = await responseApi.Result.Content.ReadAsStringAsync();
+            Debug.WriteLine("Day la list student "+responseContent);
+            var student = JsonConvert.DeserializeObject<Student>(responseContent);
+            this.Email.Text = student.Email;
+            this.Phone.Text = student.Phone;
+            this.Address.Text = student.Address;
+            this.Name.Text = student.Name;
+            var DoB = student.DoB.Substring(0, 10);
+            //this.txt_birthday.Text = DoB;
+            //this.txt_birthday.Text = student.DoB;
+            int gender_user = student.Gender;
         }
         private async void Do_Submit(object sender, RoutedEventArgs e)
         {
-            //validate data input
+            StorageFolder storageFolder = ApplicationData.Current.LocalFolder;
+            StorageFile file = await storageFolder.GetFileAsync("token.txt");
+            var content = await FileIO.ReadTextAsync(file);
+            TokenResponse tokenResponse = JsonConvert.DeserializeObject<TokenResponse>(content);
+
+            HttpClient httpClient = new HttpClient();
             this._currentStudent.Email = this.Email.Text;
-            //this._currentStudent.Name = this.Name.Text;
-            this._currentStudent.Phone = this.Email.Text;
-            this._currentStudent.Address = this.Email.Text;
+            this._currentStudent.Name = this.Name.Text;
+            this._currentStudent.Phone = this.Phone.Text;
+            this._currentStudent.Address = this.Address.Text;
             string jsonUser = JsonConvert.SerializeObject(_currentStudent);
             Debug.WriteLine(jsonUser);
-
-
-            //HttpClient httpClient = new HttpClient();
-            //StringContent stringContent = new StringContent(jsonUser,Encoding.UTF8,"application/json");
-            //var response =  httpClient.PostAsync(APIHandle.CHANGE_INFO_USER,stringContent);
-            //var responseText = await response.Result.Content.ReadAsStringAsync();
-            //if (response.Result.StatusCode == HttpStatusCode.Created)
-            //{
-            //    var rootFrame = Window.Current.Content as Frame;
-            //    rootFrame.Navigate(typeof(Views.StudentPage));
-            //    Debug.WriteLine("Change success!!!");
-            //}
+            httpClient.DefaultRequestHeaders.Add("Authorization", "Basic " + tokenResponse.accessToken);
+            StringContent stringContent = new StringContent(jsonUser, Encoding.UTF8, "application/json");
+            var response = httpClient.PostAsync(APIHandle.CHANGE_INFO_USER, stringContent);
+            var responseText = await response.Result.Content.ReadAsStringAsync();
+            if (response.Result.StatusCode == HttpStatusCode.Created)
+            {
+                var rootFrame = Window.Current.Content as Frame;
+                rootFrame.Navigate(typeof(Views.StudentPage));
+                Debug.WriteLine("Change success!!!");
+            }
             this.success.Text = "Thay đổi thông tin thành công";
+            MessageDialog messageDialog = new MessageDialog("Thay đổi thông tin thành công");
+            messageDialog.ShowAsync();
             this.Frame.Navigate(typeof(Views.StudentPage));
-            
+
         }
 
         private void RadioButton_Checked(object sender, RoutedEventArgs e)
@@ -71,6 +102,11 @@ namespace StudentApp.Views
         private void BirthdayPicker_DateChanged(CalendarDatePicker sender, CalendarDatePickerDateChangedEventArgs args)
         {
             this._currentStudent.DoB = sender.Date.Value.ToString("yyyy-MM-dd");
+        }
+
+        private void btn_back(object sender, RoutedEventArgs e)
+        {
+            this.Frame.Navigate(typeof(Views.StudentPage));
         }
     }
 }
