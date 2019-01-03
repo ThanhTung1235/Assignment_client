@@ -14,7 +14,7 @@
                 <SymbolIcon Symbol="Back"/>
                 </Button>
             <TextBlock Text="Thay đổi thông tin cá nhân" FontSize="25" HorizontalAlignment="Center" Margin="0,25,0,10" FontWeight="Bold"></TextBlock>
-            <TextBox x:Name="Name" Header="Name"/>
+            <TextBox x:Name="Name" Header="Tên"/>
             <TextBlock x:Name="name" Foreground="Red"></TextBlock>
             <Grid Margin="0, 20, 0 , 0">
                 <Grid.ColumnDefinitions>
@@ -27,7 +27,7 @@
                 </Grid.RowDefinitions>
                     <TextBox x:Name="Email" Header="Email" Grid.Row="0" Grid.Column="0" Margin="0, 0, 10, 0"/>
                 <TextBlock x:Name="email" Grid.Row="1" Grid.Column="0" Foreground="Red"></TextBlock>
-                    <TextBox x:Name="Phone" Header="Phone" Grid.Row="0" Grid.Column="1"/>
+                    <TextBox x:Name="Phone" Header="Số điện thoại" Grid.Row="0" Grid.Column="1"/>
                     <TextBlock x:Name="phone" Grid.Row="1" Grid.Column="1" Foreground="Red"></TextBlock>
             </Grid>
             

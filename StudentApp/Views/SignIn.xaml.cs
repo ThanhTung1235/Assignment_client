@@ -7,6 +7,7 @@ using System.Net;
 using System.Net.Http;
 using System.Runtime.InteropServices.WindowsRuntime;
 using System.Text.RegularExpressions;
+using Windows.ApplicationModel.Email.DataProvider;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Windows.Storage;
@@ -35,42 +36,80 @@ namespace StudentApp.Views
         public SignIn()
         {
             this.InitializeComponent();
-            ((Storyboard)Resources["GradientAnimation"]).Begin();
         }
-        
+
         private async void Button_submit(object sender, RoutedEventArgs e)
         {
-            Dictionary<string, string> login_handle = new Dictionary<string, string>();
-            login_handle.Add("email", this.Email.Text);
-            login_handle.Add("password", this.Password.Password);
-            Debug.WriteLine(login_handle);
-            HttpClient httpClient = new HttpClient();
-            StringContent stringContent = new StringContent(JsonConvert.SerializeObject(login_handle), System.Text.Encoding.UTF8, "application/json");
-            var response = httpClient.PostAsync(APIHandle.LOGIN_API, stringContent).Result;
-            var responseContent = await response.Content.ReadAsStringAsync();
-            if (response.StatusCode == System.Net.HttpStatusCode.OK)
+            string email = this.Email.Text;
+            string password = this.Password.Password;
+            Regex regex = new Regex(@"^([\w\.\-]+)@([\w\-]+)((\.(\w){2,3})+)$");
+            Match match = regex.Match(email);
+            if (match.Success)
             {
-
-                Debug.WriteLine("Login Success");
-                Debug.WriteLine(responseContent);
-                TokenResponse tokenResponse = JsonConvert.DeserializeObject<TokenResponse>(responseContent); //read token
-                StorageFolder folder = ApplicationData.Current.LocalFolder;// save token file
-                StorageFile storageFile = await folder.CreateFileAsync("token.txt", CreationCollisionOption.ReplaceExisting);
-                await FileIO.WriteTextAsync(storageFile, responseContent);
-                var rootFrame = Window.Current.Content as Frame;
-                rootFrame.Navigate(typeof(MainPage));
-
+                Login();
             }
             else
             {
-                Debug.WriteLine("Login Fail");
+                this.email.Text = "Eamil phải nhập đúng định dạng 'info@email.com'";
             }
+            if (email.Length == 0)
+            {
+                this.email.Text = "Không được bỏ trống trường này'";
+            }
+            else
+            {
+                Login();
+                this.email.Text = "";
+            }
+            if (password.Length == 0)
+            {
+                this.password.Text = "Không được bỏ trống trường này'";
+            }
+            else
+            {
+                Login();
+                this.password.Text = "";
+            }
+        }
 
+        public async void Login()
+        {
+            try
+            {
+                Dictionary<string, string> login_handle = new Dictionary<string, string>();
+                login_handle.Add("email", this.Email.Text);
+                login_handle.Add("password", this.Password.Password);
+                HttpClient httpClient = new HttpClient();
+                StringContent stringContent = new StringContent(JsonConvert.SerializeObject(login_handle), System.Text.Encoding.UTF8, "application/json");
+                var response = httpClient.PostAsync(APIHandle.LOGIN_API, stringContent).Result;
+                var responseContent = await response.Content.ReadAsStringAsync();
+                if (response.StatusCode == System.Net.HttpStatusCode.OK)
+                {
 
+                    Debug.WriteLine("Login Success");
+                    Debug.WriteLine(responseContent);
+                    TokenResponse tokenResponse = JsonConvert.DeserializeObject<TokenResponse>(responseContent); //read token
+                    StorageFolder folder = ApplicationData.Current.LocalFolder;// save token file
+                    StorageFile storageFile = await folder.CreateFileAsync("token.txt", CreationCollisionOption.ReplaceExisting);
+                    await FileIO.WriteTextAsync(storageFile, responseContent);
+                    var rootFrame = Window.Current.Content as Frame;
+                    rootFrame.Navigate(typeof(MainPage));
+
+                }
+                else
+                {
+                    Debug.WriteLine("Login Fail");
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                Debug.WriteLine(e);
+            }
+            
         }
         public static async void DoLogin()
         {
-            // Auto login nếu tồn tại file token 
             currentLogin = new Student();
             StorageFolder folder = ApplicationData.Current.LocalFolder;
             if (await folder.TryGetItemAsync("token.txt") != null)
@@ -79,10 +118,9 @@ namespace StudentApp.Views
                 var tokenContent = await FileIO.ReadTextAsync(file);
 
                 TokenResponse token = JsonConvert.DeserializeObject<TokenResponse>(tokenContent);
-                Debug.WriteLine("token la"+token.accessToken);
+                Debug.WriteLine("token la" + token.accessToken);
                 var rootFrame = Window.Current.Content as Frame;
                 rootFrame.Navigate(typeof(MainPage));
-
                 Debug.WriteLine("Da dang nhap thanh cong");
             }
             else
@@ -93,7 +131,7 @@ namespace StudentApp.Views
 
         private void Sigin_Loaded(object sender, RoutedEventArgs e)
         {
-            DoLogin();
+            //DoLogin();
         }
     }
 }

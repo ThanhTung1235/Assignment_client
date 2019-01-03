@@ -6,6 +6,7 @@
     xmlns:entity="using:StudentApp.Entity"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:Windows10FallCreatorsUpdate="http://schemas.microsoft.com/winfx/2006/xaml/presentation?IsApiContractPresent(Windows.Foundation.UniversalApiContract, 5)"
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
@@ -17,22 +18,27 @@
                     <PivotItem Header="Thông tin cá nhân">
                         <Grid>
                             <Grid.RowDefinitions>
-                                <RowDefinition Height="26.4"></RowDefinition>
-                                <RowDefinition Height="Auto" MinHeight="142.4"></RowDefinition>
+                                <RowDefinition Height="200"></RowDefinition>
+                                <RowDefinition Height="Auto" ></RowDefinition>
                                 <RowDefinition Height="*"></RowDefinition>
                             </Grid.RowDefinitions>
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="150"></ColumnDefinition>
                                 <ColumnDefinition Width="*"></ColumnDefinition>
                             </Grid.ColumnDefinitions>
-                            <StackPanel Margin="0,12.6,0,29.8" HorizontalAlignment="Center" Grid.ColumnSpan="2" Grid.Row="1" Width="278">
-                                <Image HorizontalAlignment="Stretch" Height="100" >
-                                    <Image.Source >
-                                        <BitmapImage DecodePixelWidth="200" UriSource="../../Assets/FPT.png"/>
-                                    </Image.Source>
-                                </Image>
+                            <StackPanel HorizontalAlignment="Stretch"  Grid.ColumnSpan="2" Grid.RowSpan="1">
+                                <StackPanel.Background>
+                                    <ImageBrush Stretch="UniformToFill" ImageSource="../Assets/fptUniversity.JPG" />
+                                </StackPanel.Background>
                             </StackPanel>
-                            <StackPanel Margin="30,10.2,10.4,-0.2" Grid.Row="2" HorizontalAlignment="Stretch">
+                            <StackPanel Grid.ColumnSpan="3" Grid.Row="2" Margin="0,-65" HorizontalAlignment="Stretch">
+                                <Windows10FallCreatorsUpdate:PersonPicture
+                                    DisplayName="Betsy Sherman"
+                                    ProfilePicture="../Assets/superman_icon-icons.com_55033.png"
+                                    Initials="BS"
+                                    />
+                            </StackPanel>
+                            <StackPanel Margin="30,50,10.4,-0.2" Grid.Row="2" HorizontalAlignment="Stretch">
                                 <TextBlock  Margin="0,10,0,0" Text="Email"></TextBlock>
                                 <TextBlock  Margin="0,30,0,0" Text="Tên"></TextBlock>
                                 <TextBlock  Margin="0,30,0,0" Text="Điện thoại"></TextBlock>
@@ -41,7 +47,7 @@
                                 <TextBlock Margin="0,30,0,0" Text="Ngày Sinh"></TextBlock>
                                 <TextBlock Margin="0,30,0,0" Text="Lớp"></TextBlock>
                             </StackPanel>
-                            <StackPanel Margin="150,10.2,0,-0.2" Grid.Row="2" Grid.ColumnSpan="2" HorizontalAlignment="Stretch" >
+                            <StackPanel Margin="150,50,0,-0.2" Grid.Row="2" Grid.ColumnSpan="2" HorizontalAlignment="Stretch" >
                                 <TextBlock  x:Name="txt_email" Margin="0,10,0,0" Text="thanhtungle1235@gmail.com"></TextBlock>
                                 <TextBlock  x:Name="txt_name" Margin="0,30,0,0" Text="Lê Thanh Tùng"></TextBlock>
                                 <TextBlock  x:Name="txt_phone" Margin="0,30,0,0" Text="0969296064"></TextBlock>
@@ -54,30 +60,29 @@
                         </Grid>
                     </PivotItem>
                     <PivotItem Header="Thông tin lớp học">
-                        <!--<Grid Margin="0,0,0,45">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="139*"/>
-                                <ColumnDefinition Width="269*"/>
-                            </Grid.ColumnDefinitions>
-                            <ListView ItemsSource="{x:Bind ListSong ,Mode=TwoWay}" Grid.ColumnSpan="2" HorizontalAlignment="Stretch" Margin="0,0,0,0" VerticalAlignment="Stretch" x:Name="MyListSong">
-                                <ListView.ItemTemplate>
-                                    <DataTemplate x:DataType="entity:Student">
-                                        --><!--Song choosed with tapped--><!--
-                                        <StackPanel Margin="0,10,0,10" Orientation="Horizontal" Tag="{Binding}" Tapped="currentSongs" x:Name="_isPlaying">
-                                            <Border CornerRadius="10" Width="75" Height="75" >
-                                                <Border.Background>
-                                                    <ImageBrush Stretch="UniformToFill" ImageSource="{x:Bind thumbnail}"/>
-                                                </Border.Background>
-                                            </Border>
-                                            <StackPanel Margin="20,10,0,0" Orientation="Vertical">
-                                                <TextBlock FontWeight="Bold" FontSize="16" Text="{x:Bind name}"></TextBlock>
-                                            </StackPanel>
+                        <!--<ListView ItemsSource="{x:Bind ListSong, Mode=TwoWay}" x:Name="MenuList">
+                            <ListView.ItemTemplate>
+                                <DataTemplate x:DataType="entity:Song">
+                                    <StackPanel Padding="12" Orientation="Horizontal" Tag="{Binding}" Tapped="StackPanel_Tapped" AutomationProperties.Name="{x:Bind name}">
+                                        <Ellipse Height="77" Width="77">
+                                            <Ellipse.Fill>
+                                                <ImageBrush ImageSource="{x:Bind thumbnail}"/>
+                                            </Ellipse.Fill>
+                                        </Ellipse>
+                                        <StackPanel Margin="24,12,0,0">
+                                            <TextBlock Text="{x:Bind name}" VerticalAlignment="Center" 
+                                                       Style="{ThemeResource BaseTextBlockStyle}" 
+                                                       Foreground="{ThemeResource SystemControlPageTextBaseHighBrush}"
+                                                       Margin="0,0,0,0"/>
+                                            <TextBlock Text="{x:Bind singer}" VerticalAlignment="Center"                                                
+                                                       Foreground="{ThemeResource SystemControlPageTextBaseHighBrush}" 
+                                                       Margin="0,7,0,0"/>
                                         </StackPanel>
-                                    </DataTemplate>
-                                </ListView.ItemTemplate>
 
-                            </ListView>
-                        </Grid>-->
+                                    </StackPanel>
+                                </DataTemplate>
+                            </ListView.ItemTemplate>
+                        </ListView>-->
                     </PivotItem>
                     <PivotItem Header="Thông Môn Học">
                         <TextBlock>Course info</TextBlock>

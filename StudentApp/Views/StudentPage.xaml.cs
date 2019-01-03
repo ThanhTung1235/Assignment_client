@@ -59,6 +59,7 @@ namespace StudentApp.Views
                 HttpClient client = new HttpClient();
                 client.DefaultRequestHeaders.Add("Authorization", "Basic " + tokenResponse.accessToken);
                 var response = client.GetAsync(APIHandle.GET_INFO_USER + tokenResponse.OwnerId);
+                Debug.WriteLine(APIHandle.GET_INFO_USER + tokenResponse.OwnerId);
                 var result = await response.Result.Content.ReadAsStringAsync();
                 Debug.WriteLine(result);
                 Student student = JsonConvert.DeserializeObject<Student>(result);
@@ -87,7 +88,7 @@ namespace StudentApp.Views
             catch (Exception e)
             {
                 Console.WriteLine(e);
-                throw;
+                //throw;
             }
 
 
