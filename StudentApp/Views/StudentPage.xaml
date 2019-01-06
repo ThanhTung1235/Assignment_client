@@ -54,35 +54,42 @@
                                 <TextBlock x:Name="txt_address" Margin="0,30,0,0" Text="Hà Nội"></TextBlock>
                                 <TextBlock  x:Name="txt_gender" Margin="0,30,0,0" Text="Nam"></TextBlock>
                                 <TextBlock  x:Name="txt_birthday" Margin="0,30,0,0" Text="07/07/1999"></TextBlock>
-                                <TextBlock  x:Name="txt_classroom" Margin="0,30,0,0" Text="T1708M1"></TextBlock>
+                                <TextBlock  x:Name="txt_classroom" Margin="0,30,0,0" ></TextBlock>
                                 <Button HorizontalAlignment="Left" Margin="0,50,0,0" Click="btn_change_info">Thay đổi thông tin</Button>
                             </StackPanel>
                         </Grid>
                     </PivotItem>
                     <PivotItem Header="Thông tin lớp học">
-                        <!--<ListView ItemsSource="{x:Bind ListSong, Mode=TwoWay}" x:Name="MenuList">
-                            <ListView.ItemTemplate>
-                                <DataTemplate x:DataType="entity:Song">
-                                    <StackPanel Padding="12" Orientation="Horizontal" Tag="{Binding}" Tapped="StackPanel_Tapped" AutomationProperties.Name="{x:Bind name}">
-                                        <Ellipse Height="77" Width="77">
-                                            <Ellipse.Fill>
-                                                <ImageBrush ImageSource="{x:Bind thumbnail}"/>
-                                            </Ellipse.Fill>
-                                        </Ellipse>
-                                        <StackPanel Margin="24,12,0,0">
-                                            <TextBlock Text="{x:Bind name}" VerticalAlignment="Center" 
-                                                       Style="{ThemeResource BaseTextBlockStyle}" 
-                                                       Foreground="{ThemeResource SystemControlPageTextBaseHighBrush}"
-                                                       Margin="0,0,0,0"/>
-                                            <TextBlock Text="{x:Bind singer}" VerticalAlignment="Center"                                                
-                                                       Foreground="{ThemeResource SystemControlPageTextBaseHighBrush}" 
-                                                       Margin="0,7,0,0"/>
+                        <StackPanel>
+                            <TextBlock Tapped="showDetails" Style="{ThemeResource BaseTextBlockStyle}" 
+                                   Foreground="{ThemeResource SystemControlPageTextBaseHighBrush}" FontSize="20" Margin="10">T1708A</TextBlock>
+                            <StackPanel Margin="0,10,0,0" HorizontalAlignment="Center" Orientation="Horizontal" x:Name="titleTable" Visibility="Collapsed">
+                                <TextBlock Margin="0,0,70,0">Id</TextBlock>
+                                <TextBlock Margin="0,0,90,0">Tên Sinh Viên</TextBlock>
+                                <TextBlock Margin="0,0,50,0">Email</TextBlock>
+                            </StackPanel>
+                            <ListView ItemsSource="{x:Bind ListStudent, Mode=TwoWay}" x:Name="studentList" Visibility="Collapsed">
+                                <ListView.ItemTemplate>
+                                    <DataTemplate x:DataType="entity:Student">
+                                        <StackPanel HorizontalAlignment="Center" Padding="12" Orientation="Horizontal" Tag="{Binding}" AutomationProperties.Name="{x:Bind Name}">
+                                            <StackPanel Orientation="Horizontal" Margin="40,12,0,0">
+                                                <TextBlock Text="{x:Bind Rollnumber}" VerticalAlignment="Center" 
+                                                           Foreground="{ThemeResource SystemControlPageTextBaseHighBrush}"
+                                                           Margin="0,0,70,0"/>
+                                                <TextBlock Text="{x:Bind Name}" VerticalAlignment="Center" 
+                                                           Style="{ThemeResource BaseTextBlockStyle}" 
+                                                           Foreground="{ThemeResource SystemControlPageTextBaseHighBrush}"
+                                                           Margin="0,0,70,0"/>
+                                                <TextBlock Text="{x:Bind Email}" VerticalAlignment="Center"                                                
+                                                           Foreground="{ThemeResource SystemControlPageTextBaseHighBrush}" 
+                                                           Margin="0,0,0,0"/>
+                                            </StackPanel>
                                         </StackPanel>
-
-                                    </StackPanel>
-                                </DataTemplate>
-                            </ListView.ItemTemplate>
-                        </ListView>-->
+                                    </DataTemplate>
+                                </ListView.ItemTemplate>
+                            </ListView>
+                        </StackPanel>
+                        
                     </PivotItem>
                     <PivotItem Header="Thông Môn Học">
                         <TextBlock>Course info</TextBlock>

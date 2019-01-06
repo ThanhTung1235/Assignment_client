@@ -17,9 +17,11 @@ namespace StudentApp.Entity
         public string DoB { get; set; }
         public DateTime CreatedAt { get; set; }
         public DateTime UpdatedAt { get; set; }
+        //public List<StudentClass> StudentClasses { get; set; }
         public StudentStatus Status { get; set; }
 
     }
+
     public enum StudentStatus
     {
         Active = 1,

@@ -11,6 +11,7 @@ using Windows.ApplicationModel.Email.DataProvider;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Windows.Storage;
+using Windows.UI.Popups;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
@@ -44,13 +45,14 @@ namespace StudentApp.Views
             string password = this.Password.Password;
             Regex regex = new Regex(@"^([\w\.\-]+)@([\w\-]+)((\.(\w){2,3})+)$");
             Match match = regex.Match(email);
+            Debug.WriteLine(match.Value);
             if (match.Success)
             {
                 Login();
             }
             else
             {
-                this.email.Text = "Eamil phải nhập đúng định dạng 'info@email.com'";
+                this.email.Text = "Email phải nhập đúng định dạng 'info@email.com'";
             }
             if (email.Length == 0)
             {
@@ -59,7 +61,7 @@ namespace StudentApp.Views
             else
             {
                 Login();
-                this.email.Text = "";
+                //this.email.Text = "";
             }
             if (password.Length == 0)
             {
@@ -99,12 +101,15 @@ namespace StudentApp.Views
                 else
                 {
                     Debug.WriteLine("Login Fail");
+                    MessageDialog messageDialog = new MessageDialog("Hãy kiểm tra lại email và password của bạn");
+                    messageDialog.ShowAsync();
                 }
             }
             catch (Exception e)
             {
                 Console.WriteLine(e);
                 Debug.WriteLine(e);
+                //throw;
             }
             
         }
@@ -131,7 +136,7 @@ namespace StudentApp.Views
 
         private void Sigin_Loaded(object sender, RoutedEventArgs e)
         {
-            //DoLogin();
+            DoLogin();
         }
     }
 }

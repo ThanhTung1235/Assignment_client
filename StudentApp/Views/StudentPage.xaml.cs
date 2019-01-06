@@ -19,6 +19,7 @@ using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using StudentApp.Entity;
 using StudentApp.Service;
 
@@ -32,11 +33,7 @@ namespace StudentApp.Views
     /// </summary>
     public sealed partial class StudentPage : Page
     {
-        public StudentPage()
-        {
-            this.InitializeComponent();
-            this.GetInfoUser();
-        }
+
         private ObservableCollection<Student> listStudent;
         internal ObservableCollection<Student> ListStudent
         {
@@ -44,8 +41,39 @@ namespace StudentApp.Views
             set => listStudent = value;
         }
         private int _currentIndex;
+        public StudentPage()
+        {
+            this.ListStudent = new ObservableCollection<Student>();
+            this.ListStudent.Add(new Student()
+            {
+                Rollnumber = 1,
+                Name = "Giàng A Tống",
+                Email ="info@gmail.com",
+            });
+            this.ListStudent.Add(new Student()
+            {
+                Rollnumber = 1,
+                Name = "Giàng A Tống",
+                Email = "info@gmail.com",
+            });
+            this.ListStudent.Add(new Student()
+            {
+                Rollnumber = 1,
+                Name = "Giàng A Tống",
+                Email = "info@gmail.com",
+            });
+            this.ListStudent.Add(new Student()
+            {
+                Rollnumber = 1,
+                Name = "Giàng A Tống",
+                Email = "info@gmail.com",
+            });
 
-        
+
+            this.InitializeComponent();
+            this.GetInfoUser();
+        }
+
 
         public async void GetInfoUser()
         {
@@ -62,8 +90,36 @@ namespace StudentApp.Views
                 Debug.WriteLine(APIHandle.GET_INFO_USER + tokenResponse.OwnerId);
                 var result = await response.Result.Content.ReadAsStringAsync();
                 Debug.WriteLine(result);
-                Student student = JsonConvert.DeserializeObject<Student>(result);
 
+                StorageFile storageFile = await folder.CreateFileAsync("info.txt", CreationCollisionOption.ReplaceExisting);
+                await FileIO.WriteTextAsync(storageFile, result);
+
+                var arr = JObject.Parse(result)["studentClassRooms"].ToObject<Clazz[]>();
+                for (int i = 0; i < arr.Length; i++)
+                {
+                    Debug.WriteLine("Day la lop " + arr[i].ClassRoomId);
+                    //handle
+                    int classId = arr[i].ClassRoomId;
+                    switch (classId)
+                    {
+                        case 1:
+                            this.txt_classroom.Text = "T1708A";
+                            break;
+                        case 2:
+                            this.txt_classroom.Text = "T1708M1";
+                            break;
+                        case 3:
+                            this.txt_classroom.Text = "T1709M";
+                            break;
+                        case 4:
+                            this.txt_classroom.Text = "T1609A";
+                            break;
+                        default:
+                            break;
+                    }
+                }
+
+                Student student = JsonConvert.DeserializeObject<Student>(result);
                 this.txt_email.Text = student.Email;
                 this.txt_phone.Text = student.Phone;
                 this.txt_address.Text = student.Address;
@@ -88,6 +144,7 @@ namespace StudentApp.Views
             catch (Exception e)
             {
                 Console.WriteLine(e);
+                Debug.WriteLine(e);
                 //throw;
             }
 
@@ -96,6 +153,20 @@ namespace StudentApp.Views
         private async void btn_change_info(object sender, RoutedEventArgs e)
         {
             this.Frame.Navigate(typeof(Views.ChangeInfo));
+        }
+
+        private void showDetails(object sender, TappedRoutedEventArgs e)
+        {
+            if (this.studentList.Visibility == Visibility.Collapsed && this.titleTable.Visibility == Visibility.Collapsed)
+            {
+                this.studentList.Visibility = Visibility.Visible;
+                this.titleTable.Visibility = Visibility.Visible;
+            }
+            else
+            {
+                this.studentList.Visibility = Visibility.Collapsed;
+                this.titleTable.Visibility = Visibility.Collapsed;
+            }
         }
     }
 }

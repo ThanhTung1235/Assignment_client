@@ -75,21 +75,24 @@ namespace StudentApp.Views
             this._currentStudent.Phone = this.Phone.Text;
             this._currentStudent.Address = this.Address.Text;
             string jsonUser = JsonConvert.SerializeObject(_currentStudent);
-            Debug.WriteLine(jsonUser);
+            
             httpClient.DefaultRequestHeaders.Add("Authorization", "Basic " + tokenResponse.accessToken);
             StringContent stringContent = new StringContent(jsonUser, Encoding.UTF8, "application/json");
+            Debug.WriteLine("Thong tin thay doi " + jsonUser);
             var response = httpClient.PostAsync(APIHandle.CHANGE_INFO_USER, stringContent);
             var responseText = await response.Result.Content.ReadAsStringAsync();
-            if (response.Result.StatusCode == HttpStatusCode.Created)
+            if (response.Result.StatusCode == HttpStatusCode.OK)
             {
-                var rootFrame = Window.Current.Content as Frame;
-                rootFrame.Navigate(typeof(Views.StudentPage));
+                this.success.Text = "Thay đổi thông tin thành công";
+                MessageDialog messageDialog = new MessageDialog("Thay đổi thông tin thành công");
+                messageDialog.ShowAsync();
+                this.Frame.Navigate(typeof(Views.StudentPage));
                 Debug.WriteLine("Change success!!!");
             }
-            this.success.Text = "Thay đổi thông tin thành công";
-            MessageDialog messageDialog = new MessageDialog("Thay đổi thông tin thành công");
-            messageDialog.ShowAsync();
-            this.Frame.Navigate(typeof(Views.StudentPage));
+            else
+            {
+                Debug.WriteLine("Change fail "+ response.Result.StatusCode);
+            }
 
         }
 
