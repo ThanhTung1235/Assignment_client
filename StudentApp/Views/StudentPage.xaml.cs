@@ -219,18 +219,5 @@ namespace StudentApp.Views
             }
         }
 
-        private void showDetail(object sender, TappedRoutedEventArgs e)
-        {
-            if (this.studentsList.Visibility == Visibility.Collapsed && this.NameTable.Visibility == Visibility.Collapsed)
-            {
-                this.studentsList.Visibility = Visibility.Visible;
-                this.NameTable.Visibility = Visibility.Visible;
-            }
-            else
-            {
-                this.studentsList.Visibility = Visibility.Collapsed;
-                this.NameTable.Visibility = Visibility.Collapsed;
-            }
-        }
     }
 }
