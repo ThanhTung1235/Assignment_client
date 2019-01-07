@@ -8,7 +8,7 @@ namespace StudentApp.Entity
 {
     class Student
     {
-        public int Rollnumber { get; set; }
+        public int Id { get; set; }
         public string Name { get; set; }
         public string Email { get; set; }
         public int Gender { get; set; }

@@ -43,12 +43,6 @@ namespace StudentApp
             {
                 await storageFile.DeleteAsync();
             }
-            StorageFile file = await ApplicationData.Current.LocalFolder.GetFileAsync("info.txt");
-            if (file != null)
-            {
-                await file.DeleteAsync();
-            }
-
         }
         private void RadioButton_Click(object sender, RoutedEventArgs e)
         {

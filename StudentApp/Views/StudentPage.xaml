@@ -61,35 +61,71 @@
                     </PivotItem>
                     <PivotItem Header="Thông tin lớp học">
                         <StackPanel>
-                            <TextBlock Tapped="showDetails" Style="{ThemeResource BaseTextBlockStyle}" 
-                                   Foreground="{ThemeResource SystemControlPageTextBaseHighBrush}" FontSize="20" Margin="10">T1708A</TextBlock>
-                            <StackPanel Margin="0,10,0,0" HorizontalAlignment="Center" Orientation="Horizontal" x:Name="titleTable" Visibility="Collapsed">
-                                <TextBlock Margin="0,0,70,0">Id</TextBlock>
-                                <TextBlock Margin="0,0,90,0">Tên Sinh Viên</TextBlock>
-                                <TextBlock Margin="0,0,50,0">Email</TextBlock>
-                            </StackPanel>
-                            <ListView ItemsSource="{x:Bind ListStudent, Mode=TwoWay}" x:Name="studentList" Visibility="Collapsed">
-                                <ListView.ItemTemplate>
-                                    <DataTemplate x:DataType="entity:Student">
-                                        <StackPanel HorizontalAlignment="Center" Padding="12" Orientation="Horizontal" Tag="{Binding}" AutomationProperties.Name="{x:Bind Name}">
-                                            <StackPanel Orientation="Horizontal" Margin="40,12,0,0">
-                                                <TextBlock Text="{x:Bind Rollnumber}" VerticalAlignment="Center" 
+                            <StackPanel>
+                                <Border BorderBrush="Green"  BorderThickness="0,0,0,2">
+                                    <TextBlock Tapped="showDetails"  Style="{ThemeResource BaseTextBlockStyle}" 
+                                           Foreground="{ThemeResource SystemControlPageTextBaseHighBrush}" FontSize="20" Margin="10">T1708A</TextBlock>
+                                </Border>
+                                <StackPanel Margin="0,10,0,0"  Orientation="Horizontal" x:Name="titleTable" Visibility="Collapsed">
+                                    <TextBlock Margin="30,0,50,0">Id</TextBlock>
+                                    <TextBlock Margin="0,0,60,0">Tên Sinh Viên</TextBlock>
+                                    <TextBlock Margin="0,0,50,0">Email</TextBlock>
+                                </StackPanel>
+                                <ListView ItemsSource="{x:Bind ListStudent, Mode=TwoWay}" x:Name="studentList" Visibility="Collapsed">
+                                    <ListView.ItemTemplate>
+                                        <DataTemplate x:DataType="entity:Student">
+                                            <StackPanel  Padding="12" Orientation="Horizontal" Tag="{Binding}" AutomationProperties.Name="{x:Bind Name}">
+                                                <StackPanel Orientation="Horizontal" Margin="10,12,0,0">
+                                                    <TextBlock Width="14" Text="{x:Bind Id}" VerticalAlignment="Center" 
                                                            Foreground="{ThemeResource SystemControlPageTextBaseHighBrush}"
-                                                           Margin="0,0,70,0"/>
-                                                <TextBlock Text="{x:Bind Name}" VerticalAlignment="Center" 
+                                                           Margin="0,0,50,0"/>
+                                                    <TextBlock Width="100" Text="{x:Bind Name}" VerticalAlignment="Center" 
                                                            Style="{ThemeResource BaseTextBlockStyle}" 
                                                            Foreground="{ThemeResource SystemControlPageTextBaseHighBrush}"
-                                                           Margin="0,0,70,0"/>
-                                                <TextBlock Text="{x:Bind Email}" VerticalAlignment="Center"                                                
+                                                           Margin="0,0,50,0"/>
+                                                    <TextBlock Text="{x:Bind Email}" VerticalAlignment="Center"                                                
                                                            Foreground="{ThemeResource SystemControlPageTextBaseHighBrush}" 
                                                            Margin="0,0,0,0"/>
+                                                </StackPanel>
                                             </StackPanel>
-                                        </StackPanel>
-                                    </DataTemplate>
-                                </ListView.ItemTemplate>
-                            </ListView>
+                                        </DataTemplate>
+                                    </ListView.ItemTemplate>
+                                </ListView>
+                            </StackPanel>
+                            <StackPanel>
+                                <Border BorderBrush="Green"  BorderThickness="0,0,0,2">
+                                    <TextBlock Tapped="showDetail"  Style="{ThemeResource BaseTextBlockStyle}" 
+                                           Foreground="{ThemeResource SystemControlPageTextBaseHighBrush}" FontSize="20" Margin="10">T1708M1</TextBlock>
+                                </Border>
+                                <StackPanel Margin="0,10,0,0"  Orientation="Horizontal" x:Name="NameTable" Visibility="Collapsed">
+                                    <TextBlock Margin="30,0,50,0">Id</TextBlock>
+                                    <TextBlock Margin="0,0,60,0">Tên Sinh Viên</TextBlock>
+                                    <TextBlock Margin="0,0,50,0">Email</TextBlock>
+                                </StackPanel>
+                                <ListView ItemsSource="{x:Bind ListStudent, Mode=TwoWay}" x:Name="studentsList" Visibility="Collapsed">
+                                    <ListView.ItemTemplate>
+                                        <DataTemplate x:DataType="entity:Student">
+                                            <StackPanel  Padding="12" Orientation="Horizontal" Tag="{Binding}" AutomationProperties.Name="{x:Bind Name}">
+                                                <StackPanel Orientation="Horizontal" Margin="10,12,0,0">
+                                                    <TextBlock  Width="14" Text="{x:Bind Id}" VerticalAlignment="Center" 
+                                                           Foreground="{ThemeResource SystemControlPageTextBaseHighBrush}"
+                                                           Margin="0,0,50,0"/>
+                                                    <TextBlock Width="100" Text="{x:Bind Name}" VerticalAlignment="Center" 
+                                                           Style="{ThemeResource BaseTextBlockStyle}" 
+                                                           Foreground="{ThemeResource SystemControlPageTextBaseHighBrush}"
+                                                           Margin="0,0,50,0"/>
+                                                    <TextBlock Text="{x:Bind Email}" VerticalAlignment="Center"                                                
+                                                           Foreground="{ThemeResource SystemControlPageTextBaseHighBrush}" 
+                                                           Margin="0,0,0,0"/>
+                                                </StackPanel>
+                                            </StackPanel>
+                                        </DataTemplate>
+                                    </ListView.ItemTemplate>
+                                </ListView>
+                            </StackPanel>
                         </StackPanel>
                         
+
                     </PivotItem>
                     <PivotItem Header="Thông Môn Học">
                         <TextBlock>Course info</TextBlock>

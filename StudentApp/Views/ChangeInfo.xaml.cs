@@ -7,6 +7,7 @@ using System.Net;
 using System.Net.Http;
 using System.Runtime.InteropServices.WindowsRuntime;
 using System.Text;
+using System.Text.RegularExpressions;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Windows.Storage;
@@ -52,7 +53,7 @@ namespace StudentApp.Views
             var responseApi = httpClient.GetAsync(APIHandle.GET_INFO_USER +tokenResponse.OwnerId);
             var responseContent = await responseApi.Result.Content.ReadAsStringAsync();
             Debug.WriteLine("Day la list student "+responseContent);
-            var student = JsonConvert.DeserializeObject<Student>(responseContent);
+            Student student = JsonConvert.DeserializeObject<Student>(responseContent);
             this.Email.Text = student.Email;
             this.Phone.Text = student.Phone;
             this.Address.Text = student.Address;
@@ -63,6 +64,61 @@ namespace StudentApp.Views
             int gender_user = student.Gender;
         }
         private async void Do_Submit(object sender, RoutedEventArgs e)
+        {
+            string email = this.Email.Text;
+            string name = this.Name.Text;
+            string phone = this.Phone.Text;
+            string address = this.Address.Text;
+            Regex regex = new Regex(@"^([\w\.\-]+)@([\w\-]+)((\.(\w){2,3})+)$");
+            Match match = regex.Match(email);
+            Debug.WriteLine(match.Value);
+            if (match.Success)
+            {
+                SendInfoChange();
+            }
+            else
+            {
+                this.email.Text = "Email phải nhập đúng định dạng 'info@email.com'";
+            }
+            if (email.Length == 0)
+            {
+                this.email.Text = "Không được bỏ trống trường này'";
+            }
+            else
+            {
+                SendInfoChange();
+                //this.email.Text = "";
+            }
+            if (name.Length == 0)
+            {
+                this.name.Text = "Không được bỏ trống trường này'";
+            }
+            else
+            {
+                SendInfoChange();
+                this.name.Text = "";
+            }
+            if (phone.Length == 0)
+            {
+                this.phone.Text = "Không được bỏ trống trường này'";
+            }
+            else
+            {
+                SendInfoChange();
+                this.phone.Text = "";
+            }
+            if (address.Length == 0)
+            {
+                this.address.Text = "Không được bỏ trống trường này'";
+            }
+            else
+            {
+                SendInfoChange();
+                this.address.Text = "";
+            }
+        }
+
+        public async void SendInfoChange()
         {
             StorageFolder storageFolder = ApplicationData.Current.LocalFolder;
             StorageFile file = await storageFolder.GetFileAsync("token.txt");
@@ -75,7 +131,7 @@ namespace StudentApp.Views
             this._currentStudent.Phone = this.Phone.Text;
             this._currentStudent.Address = this.Address.Text;
             string jsonUser = JsonConvert.SerializeObject(_currentStudent);
-            
+
             httpClient.DefaultRequestHeaders.Add("Authorization", "Basic " + tokenResponse.accessToken);
             StringContent stringContent = new StringContent(jsonUser, Encoding.UTF8, "application/json");
             Debug.WriteLine("Thong tin thay doi " + jsonUser);
@@ -91,9 +147,8 @@ namespace StudentApp.Views
             }
             else
             {
-                Debug.WriteLine("Change fail "+ response.Result.StatusCode);
+                Debug.WriteLine("Change fail " + response.Result.StatusCode);
             }
-
         }
 
         private void RadioButton_Checked(object sender, RoutedEventArgs e)

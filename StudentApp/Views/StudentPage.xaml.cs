@@ -35,45 +35,98 @@ namespace StudentApp.Views
     {
 
         private ObservableCollection<Student> listStudent;
+        public static string result = null;
         internal ObservableCollection<Student> ListStudent
         {
             get => listStudent;
             set => listStudent = value;
         }
         private int _currentIndex;
+
         public StudentPage()
         {
             this.ListStudent = new ObservableCollection<Student>();
-            this.ListStudent.Add(new Student()
-            {
-                Rollnumber = 1,
-                Name = "Giàng A Tống",
-                Email ="info@gmail.com",
-            });
-            this.ListStudent.Add(new Student()
-            {
-                Rollnumber = 1,
-                Name = "Giàng A Tống",
-                Email = "info@gmail.com",
-            });
-            this.ListStudent.Add(new Student()
-            {
-                Rollnumber = 1,
-                Name = "Giàng A Tống",
-                Email = "info@gmail.com",
-            });
-            this.ListStudent.Add(new Student()
-            {
-                Rollnumber = 1,
-                Name = "Giàng A Tống",
-                Email = "info@gmail.com",
-            });
-
-
+            //this.ListStudent.Add(new Student()
+            //{
+            //    Id = 11,
+            //    Name = "Giàng A Tống",
+            //    Email = "info@gmail.com",
+            //});
+            //this.ListStudent.Add(new Student()
+            //{
+            //    Id = 11,
+            //    Name = "Giàng A Tống",
+            //    Email = "info@gmail.com",
+            //});
+            //this.ListStudent.Add(new Student()
+            //{
+            //    Id = 11,
+            //    Name = "Giàng A Tống",
+            //    Email = "info@gmail.com",
+            //});
+            //this.ListStudent.Add(new Student()
+            //{
+            //    Id = 11,
+            //    Name = "Giàng A Tống",
+            //    Email = "info@gmail.com",
+            //});
             this.InitializeComponent();
             this.GetInfoUser();
+            this.GetClazz();
         }
 
+
+
+        public static async Task<string> GetApi()
+        {
+            if (result == null)
+            {
+                StorageFolder folder = ApplicationData.Current.LocalFolder;
+                StorageFile file = await folder.GetFileAsync("token.txt");
+                string content = await FileIO.ReadTextAsync(file);
+                TokenResponse tokenResponse = JsonConvert.DeserializeObject<TokenResponse>(content);
+
+                HttpClient client = new HttpClient();
+                client.DefaultRequestHeaders.Add("Authorization", "Basic " + tokenResponse.accessToken);
+                var response = client.GetAsync(APIHandle.GET_INFO_USER + tokenResponse.OwnerId);
+                Debug.WriteLine(APIHandle.GET_INFO_USER + tokenResponse.OwnerId);
+                var contentResponse = await response.Result.Content.ReadAsStringAsync();
+                result = contentResponse;
+            }
+            return result;
+        }
+
+        public async void GetClazz()
+        {
+            try
+            {
+                await GetApi();
+            Debug.WriteLine("day la result   " + result);
+            var arrs = JObject.Parse(result)["studentClassRooms"].ToObject<Clazz[]>();
+            foreach (var arr in arrs)
+            {
+                Debug.WriteLine("clazz" + arr.ClassRoomId);
+                HttpClient client = new HttpClient();
+                var response = client.GetAsync(APIHandle.GET_CLAZZ + arr.ClassRoomId);
+                Debug.WriteLine(APIHandle.GET_CLAZZ + arr.ClassRoomId);
+                var contentResponse = await response.Result.Content.ReadAsStringAsync();
+                Debug.WriteLine("contentResponse lady " + contentResponse);
+                ObservableCollection<Student> students = JsonConvert.DeserializeObject<ObservableCollection<Student>>(contentResponse);
+                foreach (var student in students)
+                {
+                    listStudent.Add(student);
+                }
+
+            }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                Debug.WriteLine(e);
+                //throw;
+            }
+
+        }
 
         public async void GetInfoUser()
         {
@@ -89,15 +142,10 @@ namespace StudentApp.Views
                 var response = client.GetAsync(APIHandle.GET_INFO_USER + tokenResponse.OwnerId);
                 Debug.WriteLine(APIHandle.GET_INFO_USER + tokenResponse.OwnerId);
                 var result = await response.Result.Content.ReadAsStringAsync();
-                Debug.WriteLine(result);
-
-                StorageFile storageFile = await folder.CreateFileAsync("info.txt", CreationCollisionOption.ReplaceExisting);
-                await FileIO.WriteTextAsync(storageFile, result);
-
                 var arr = JObject.Parse(result)["studentClassRooms"].ToObject<Clazz[]>();
                 for (int i = 0; i < arr.Length; i++)
                 {
-                    Debug.WriteLine("Day la lop " + arr[i].ClassRoomId);
+                    //Debug.WriteLine("Day la lop " + arr[i].ClassRoomId);
                     //handle
                     int classId = arr[i].ClassRoomId;
                     switch (classId)
@@ -140,12 +188,14 @@ namespace StudentApp.Views
                         this.txt_gender.Text = "Giới tính khác";
                         break;
                 }
+
+
+
             }
             catch (Exception e)
             {
                 Console.WriteLine(e);
                 Debug.WriteLine(e);
-                //throw;
             }
 
 
@@ -166,6 +216,20 @@ namespace StudentApp.Views
             {
                 this.studentList.Visibility = Visibility.Collapsed;
                 this.titleTable.Visibility = Visibility.Collapsed;
+            }
+        }
+
+        private void showDetail(object sender, TappedRoutedEventArgs e)
+        {
+            if (this.studentsList.Visibility == Visibility.Collapsed && this.NameTable.Visibility == Visibility.Collapsed)
+            {
+                this.studentsList.Visibility = Visibility.Visible;
+                this.NameTable.Visibility = Visibility.Visible;
+            }
+            else
+            {
+                this.studentsList.Visibility = Visibility.Collapsed;
+                this.NameTable.Visibility = Visibility.Collapsed;
             }
         }
     }
