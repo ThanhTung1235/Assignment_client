@@ -23,29 +23,23 @@ using Newtonsoft.Json.Linq;
 using StudentApp.Entity;
 using StudentApp.Service;
 
-
-// The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=234238
-
 namespace StudentApp.Views
 {
-    /// <summary>
-    /// An empty page that can be used on its own or navigated to within a Frame.
-    /// </summary>
     public sealed partial class StudentPage : Page
     {
 
-        private ObservableCollection<Student> listStudent;
+        private ObservableCollection<Clazz> listClazz;
         public static string result = null;
-        internal ObservableCollection<Student> ListStudent
+        internal ObservableCollection<Clazz> ListClazz
         {
-            get => listStudent;
-            set => listStudent = value;
+            get => listClazz;
+            set => listClazz = value;
         }
         private int _currentIndex;
 
         public StudentPage()
         {
-            this.ListStudent = new ObservableCollection<Student>();
+            this.ListClazz = new ObservableCollection<Clazz>();
             //this.ListStudent.Add(new Student()
             //{
             //    Id = 11,
@@ -101,29 +95,20 @@ namespace StudentApp.Views
             try
             {
                 await GetApi();
-            Debug.WriteLine("day la result   " + result);
-            var arrs = JObject.Parse(result)["studentClassRooms"].ToObject<Clazz[]>();
-            foreach (var arr in arrs)
-            {
-                Debug.WriteLine("clazz" + arr.ClassRoomId);
-                HttpClient client = new HttpClient();
-                var response = client.GetAsync(APIHandle.GET_CLAZZ + arr.ClassRoomId);
-                Debug.WriteLine(APIHandle.GET_CLAZZ + arr.ClassRoomId);
-                var contentResponse = await response.Result.Content.ReadAsStringAsync();
-                Debug.WriteLine("contentResponse lady " + contentResponse);
-                ObservableCollection<Student> students = JsonConvert.DeserializeObject<ObservableCollection<Student>>(contentResponse);
-                foreach (var student in students)
+                Debug.WriteLine("day la result   " + result);
+                var arrs = JObject.Parse(result)["studentClassRooms"].ToObject<Clazz[]>();
+                var json = JsonConvert.SerializeObject(arrs);
+                ObservableCollection<Clazz> clazzes = JsonConvert.DeserializeObject<ObservableCollection<Clazz>>(json);
+                foreach (var clazz in clazzes)
                 {
-                    listStudent.Add(student);
+                    listClazz.Add(clazz);
                 }
-
-            }
             }
             catch (Exception e)
             {
                 Console.WriteLine(e);
                 Debug.WriteLine(e);
-                //throw;
+                throw;
             }
 
         }
@@ -146,7 +131,7 @@ namespace StudentApp.Views
                 for (int i = 0; i < arr.Length; i++)
                 {
                     //Debug.WriteLine("Day la lop " + arr[i].ClassRoomId);
-                    //handle
+                    
                     int classId = arr[i].ClassRoomId;
                     switch (classId)
                     {
@@ -205,19 +190,12 @@ namespace StudentApp.Views
             this.Frame.Navigate(typeof(Views.ChangeInfo));
         }
 
-        private void showDetails(object sender, TappedRoutedEventArgs e)
+        private void Clazz_choose(object sender, TappedRoutedEventArgs e)
         {
-            if (this.studentList.Visibility == Visibility.Collapsed && this.titleTable.Visibility == Visibility.Collapsed)
-            {
-                this.studentList.Visibility = Visibility.Visible;
-                this.titleTable.Visibility = Visibility.Visible;
-            }
-            else
-            {
-                this.studentList.Visibility = Visibility.Collapsed;
-                this.titleTable.Visibility = Visibility.Collapsed;
-            }
+            _currentIndex = this.clazzList.SelectedIndex;
+            var parameters = new Clazz();
+            parameters.ClassRoomId = this.ListClazz[_currentIndex].ClassRoomId;
+            this.Frame.Navigate(typeof(Views.DetailsClazz), parameters);
         }
-
     }
 }

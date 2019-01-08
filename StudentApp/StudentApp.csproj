@@ -106,6 +106,9 @@
     <Compile Include="Views\ChangeInfo.xaml.cs">
       <DependentUpon>ChangeInfo.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\DetailsClazz.xaml.cs">
+      <DependentUpon>DetailsClazz.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\SignIn.xaml.cs">
       <DependentUpon>SignIn.xaml</DependentUpon>
     </Compile>
@@ -145,6 +148,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Views\ChangeInfo.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\DetailsClazz.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

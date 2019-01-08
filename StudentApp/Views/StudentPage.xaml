@@ -62,11 +62,22 @@
                     <PivotItem Header="Thông tin lớp học">
                         <StackPanel>
                             <StackPanel>
-                                <Border BorderBrush="Green"  BorderThickness="0,0,0,2">
-                                    <TextBlock Tapped="showDetails"  Style="{ThemeResource BaseTextBlockStyle}" 
-                                           Foreground="{ThemeResource SystemControlPageTextBaseHighBrush}" FontSize="20" Margin="10">T1708A</TextBlock>
-                                </Border>
-                                <StackPanel Margin="0,10,0,0"  Orientation="Horizontal" x:Name="titleTable" Visibility="Collapsed">
+                                <ListView ItemsSource="{x:Bind ListClazz, Mode=TwoWay}" x:Name="clazzList">
+                                    <ListView.ItemTemplate>
+                                        <DataTemplate x:DataType="entity:Clazz">
+                                            <StackPanel Orientation="Horizontal" Tag="{Binding}" AutomationProperties.Name="{x:Bind ClassRoomId}">
+                                                <StackPanel Tapped="Clazz_choose" Orientation="Horizontal" Margin="0,12,0,0">
+                                                    <Border BorderBrush="Green"  BorderThickness="0,0,0,2">
+                                                        <TextBlock Width="5000" Text="{x:Bind ClassRoomId}"   Style="{ThemeResource BaseTextBlockStyle}" 
+                                                                   Foreground="{ThemeResource SystemControlPageTextBaseHighBrush}" x:Name="ClassName" FontSize="15" Margin="10">T1708A</TextBlock>
+                                                    </Border>
+                                                </StackPanel>
+                                            </StackPanel>
+                                        </DataTemplate>
+                                    </ListView.ItemTemplate>
+                                </ListView>
+
+                                <!--<StackPanel Margin="0,10,0,0"  Orientation="Horizontal" x:Name="titleTable" Visibility="Collapsed">
                                     <TextBlock Margin="30,0,50,0">Id</TextBlock>
                                     <TextBlock Margin="0,0,60,0">Tên Sinh Viên</TextBlock>
                                     <TextBlock Margin="0,0,50,0">Email</TextBlock>
@@ -90,10 +101,10 @@
                                             </StackPanel>
                                         </DataTemplate>
                                     </ListView.ItemTemplate>
-                                </ListView>
+                                </ListView>-->
                             </StackPanel>
                         </StackPanel>
-                        
+
 
                     </PivotItem>
                     <PivotItem Header="Thông Môn Học">
