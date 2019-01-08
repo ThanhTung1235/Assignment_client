@@ -13,6 +13,10 @@
         <Frame x:Name="DetailsFrame">
             <StackPanel Padding="10">
                 <Button x:Name="BackButton" Click="Back_Click" Style="{StaticResource NavigationBackButtonNormalStyle}"/>
+                <Border BorderBrush="Green" BorderThickness="0,0,0,1">
+                    <TextBlock x:Name="ClazzName" Text="T1708A" FontSize="20"></TextBlock>
+                </Border>
+                
                 <StackPanel Margin="0,10,0,0"  Orientation="Horizontal" x:Name="titleTable" >
                     <TextBlock Margin="30,0,50,0">Id</TextBlock>
                     <TextBlock Margin="0,0,60,0">Tên Sinh Viên</TextBlock>

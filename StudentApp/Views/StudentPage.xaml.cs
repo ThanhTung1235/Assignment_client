@@ -4,6 +4,7 @@ using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Net.Http;
 using System.Runtime.InteropServices.WindowsRuntime;
 using System.Text.RegularExpressions;
@@ -29,7 +30,13 @@ namespace StudentApp.Views
     {
 
         private ObservableCollection<Clazz> listClazz;
+        private ObservableCollection<Subject> listSubjects;
         public static string result = null;
+        internal ObservableCollection<Subject> ListSubject
+        {
+            get => listSubjects;
+            set => listSubjects = value;
+        }
         internal ObservableCollection<Clazz> ListClazz
         {
             get => listClazz;
@@ -40,54 +47,42 @@ namespace StudentApp.Views
         public StudentPage()
         {
             this.ListClazz = new ObservableCollection<Clazz>();
-            //this.ListStudent.Add(new Student()
-            //{
-            //    Id = 11,
-            //    Name = "Giàng A Tống",
-            //    Email = "info@gmail.com",
-            //});
-            //this.ListStudent.Add(new Student()
-            //{
-            //    Id = 11,
-            //    Name = "Giàng A Tống",
-            //    Email = "info@gmail.com",
-            //});
-            //this.ListStudent.Add(new Student()
-            //{
-            //    Id = 11,
-            //    Name = "Giàng A Tống",
-            //    Email = "info@gmail.com",
-            //});
-            //this.ListStudent.Add(new Student()
-            //{
-            //    Id = 11,
-            //    Name = "Giàng A Tống",
-            //    Email = "info@gmail.com",
-            //});
+            this.ListSubject = new ObservableCollection<Subject>();
             this.InitializeComponent();
             this.GetInfoUser();
             this.GetClazz();
+            this.GetSubject();
         }
 
 
 
         public static async Task<string> GetApi()
         {
-            if (result == null)
+            try
             {
-                StorageFolder folder = ApplicationData.Current.LocalFolder;
-                StorageFile file = await folder.GetFileAsync("token.txt");
-                string content = await FileIO.ReadTextAsync(file);
-                TokenResponse tokenResponse = JsonConvert.DeserializeObject<TokenResponse>(content);
+                if (result == null)
+                {
+                    StorageFolder folder = ApplicationData.Current.LocalFolder;
+                    StorageFile file = await folder.GetFileAsync("token.txt");
+                    string content = await FileIO.ReadTextAsync(file);
+                    TokenResponse tokenResponse = JsonConvert.DeserializeObject<TokenResponse>(content);
 
-                HttpClient client = new HttpClient();
-                client.DefaultRequestHeaders.Add("Authorization", "Basic " + tokenResponse.accessToken);
-                var response = client.GetAsync(APIHandle.GET_INFO_USER + tokenResponse.OwnerId);
-                Debug.WriteLine(APIHandle.GET_INFO_USER + tokenResponse.OwnerId);
-                var contentResponse = await response.Result.Content.ReadAsStringAsync();
-                result = contentResponse;
+                    HttpClient client = new HttpClient();
+                    client.DefaultRequestHeaders.Add("Authorization", "Basic " + tokenResponse.accessToken);
+                    var response = client.GetAsync(APIHandle.GET_INFO_USER + tokenResponse.OwnerId);
+                    Debug.WriteLine(APIHandle.GET_INFO_USER + tokenResponse.OwnerId);
+                    var contentResponse = await response.Result.Content.ReadAsStringAsync();
+                    result = contentResponse;
+                    StorageFile storageFile = await folder.CreateFileAsync("info.txt", CreationCollisionOption.ReplaceExisting);
+                    await FileIO.WriteTextAsync(storageFile, contentResponse);
+                }
+                return result;
             }
-            return result;
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
         }
 
         public async void GetClazz()
@@ -185,6 +180,39 @@ namespace StudentApp.Views
 
 
         }
+
+        public async void GetSubject()
+        {
+            try
+            {
+                HttpClient httpClient = new HttpClient();
+                var response = httpClient.GetAsync(APIHandle.GET_INFO_COURSE).Result;
+                if (response.StatusCode == HttpStatusCode.OK)
+                {
+                    var contentResponse = await response.Content.ReadAsStringAsync();
+                    ObservableCollection<Subject> subjects = JsonConvert.DeserializeObject<ObservableCollection<Subject>>(contentResponse);
+                    foreach (var subject in subjects)
+                    {
+                        listSubjects.Add(subject);
+                    }
+                }
+                else
+                {
+                    this.Error.Visibility = Visibility.Visible;
+                    this.Content.Visibility = Visibility.Collapsed;
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                this.Error.Visibility = Visibility.Visible;
+                this.Content.Visibility = Visibility.Collapsed;
+                //throw;
+            }
+            
+            
+
+        }
         private async void btn_change_info(object sender, RoutedEventArgs e)
         {
             this.Frame.Navigate(typeof(Views.ChangeInfo));
@@ -196,6 +224,15 @@ namespace StudentApp.Views
             var parameters = new Clazz();
             parameters.ClassRoomId = this.ListClazz[_currentIndex].ClassRoomId;
             this.Frame.Navigate(typeof(Views.DetailsClazz), parameters);
+        }
+
+        private void Subject_choose(object sender, TappedRoutedEventArgs e)
+        {
+            _currentIndex = this._listSubject.SelectedIndex;
+            var parameters = new Subject();
+            parameters.Id = this.ListSubject[_currentIndex].Id;
+            parameters.Name = this.ListSubject[_currentIndex].Name;
+            this.Frame.Navigate(typeof(Views.MarkDetails), parameters);
         }
     }
 }

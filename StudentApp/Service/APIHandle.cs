@@ -12,7 +12,7 @@ namespace StudentApp.Service
         public static string GET_INFO_USER = "https://fptmanagersutdent.azurewebsites.net/api/StudentsAPI/";
         public static string GET_INFO_CLASS = "";
         public static string CHANGE_INFO_USER = "https://fptmanagersutdent.azurewebsites.net/api/StudentsAPI/change-information";
-        public static string GET_INFO_COURSE = "";
+        public static string GET_INFO_COURSE = "https://fptmanagersutdent.azurewebsites.net/api/StudentsAPI/ListCourse";
         public static string GET_CLAZZ = "https://fptmanagersutdent.azurewebsites.net/api/StudentsAPI/ListStudentInClass?gradeId=";
     }
 }

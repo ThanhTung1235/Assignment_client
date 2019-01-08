@@ -69,7 +69,21 @@ namespace StudentApp.Views
             base.OnNavigatedTo(e);
 
             var parameters = (Clazz) e.Parameter;
-
+            int clazzId = parameters.ClassRoomId;
+            switch (clazzId)
+            {
+                case 1:
+                    this.ClazzName.Text = "T1708A";
+                    break;
+                case 2:
+                    this.ClazzName.Text = "T1708M1";
+                    break;
+                case 3:
+                    this.ClazzName.Text = "T1708M";
+                    break;
+                default:
+                    break;
+            }
             HttpClient httpClient = new HttpClient();
             var response = httpClient.GetAsync(APIHandle.GET_CLAZZ + parameters.ClassRoomId);
             var result = await response.Result.Content.ReadAsStringAsync();
